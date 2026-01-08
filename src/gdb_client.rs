@@ -91,7 +91,7 @@ impl<T: GdbTransport> GdbClient<T> {
             return;
         }
 
-        self.transport.close();
+        let _ = self.transport.close();
         self.connected = false;
     }
 
