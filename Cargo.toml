@@ -1,0 +1,13 @@
+[package]
+name = "openocd_agdi"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+
+winapi = "0.2.7"
+user32-sys = "0.2.0"
+quick-xml = "0.31"
