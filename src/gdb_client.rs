@@ -86,14 +86,13 @@ impl<T: GdbTransport> GdbClient<T> {
         Ok(())
     }
 
-    pub fn disconnect(&mut self) -> io::Result<()> {
+    pub fn disconnect(&mut self)  {
         if !self.connected {
-            return Ok(());
+            return;
         }
 
-        self.transport.close()?;
+        self.transport.close();
         self.connected = false;
-        Ok(())
     }
 
     fn escape_binary(data: &[u8]) -> Vec<u8> {
@@ -544,7 +543,7 @@ mod tests {
         client.connect().unwrap();
         assert!(client.connected);
 
-        client.disconnect().unwrap();
+        client.disconnect();
         assert!(!client.connected);
     }
     #[test]

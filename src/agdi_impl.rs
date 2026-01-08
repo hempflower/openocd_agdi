@@ -129,6 +129,7 @@ fn align_up(value: u32, align: u32) -> u32 {
     (value + align - 1) & !(align - 1)
 }
 
+
 pub struct Agdi {
     p_callback: Option<Pcbf>,
     gdb_client: GdbClient<TcpTransport>,
@@ -196,8 +197,9 @@ impl Agdi {
         }
     }
 
-    pub fn start_flash_load(&mut self) -> u32 {
+    fn do_flash_load_internal(&mut self) -> u32 {
         self.progress_bar_init("Loading...");
+
         // 获取 flash 信息
         let flash_infs = match self.gdb_client.get_flash_info() {
             Ok(i) => i,
@@ -244,13 +246,15 @@ impl Agdi {
             Ok(_) => {}
             Err(_) => return AG_NOACCESS,
         };
-        match self.gdb_client.disconnect() {
-            Ok(_) => {}
-            Err(_) => return AG_NOACCESS,
-        };
         self.progress_bar_kill();
 
         AG_OK
+    }
+
+    pub fn start_flash_load(&mut self) -> u32 {
+        let result = self.do_flash_load_internal();
+        self.gdb_client.disconnect();
+        result
     }
 
     pub fn get_flash_param(&self, _vp: *mut FlashParm) -> *mut FlashParm {
